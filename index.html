@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F0A500">
+<title>Mama's Vault</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#f5f4f0;--surface:#fff;--surface2:#f0efe9;
+  --border:rgba(0,0,0,.1);--border2:rgba(0,0,0,.2);
+  --text:#1a1a18;--text2:#6b6a65;--text3:#9e9d98;
+  --green:#1D9E75;--green-bg:#E1F5EE;--green-dark:#0F6E56;
+  --amber:#BA7517;--amber-bg:#FAEEDA;
+  --coral:#D85A30;--coral-bg:#FAECE7;
+  --blue:#185FA5;--blue-bg:#E6F1FB;
+  --radius:10px;--radius-sm:7px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+.app-header{background:var(--surface);border-bottom:0.5px solid var(--border);padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.app-header-left{display:flex;align-items:center;gap:10px}
+.app-icon{width:36px;height:36px;border-radius:50%;background:linear-gradient(145deg,#FFD23F,#F0A500);border:2px solid #C97D00;box-shadow:inset 0 -3px 0 #C97D00;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.app-title{font-size:15px;font-weight:700}
+.app-sub{font-size:11px;color:var(--text2)}
+.print-btn{font-size:12px;font-weight:500;padding:6px 12px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;gap:5px}
+.month-bar{background:var(--surface);border-bottom:0.5px solid var(--border);padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:57px;z-index:9}
+.month-nav{display:flex;align-items:center;gap:6px}
+.month-nav-btn{width:28px;height:28px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.month-name{font-size:14px;font-weight:700;min-width:100px;text-align:center}
+.half-toggle{display:flex;background:var(--surface2);border-radius:var(--radius-sm);padding:3px;gap:3px}
+.half-btn{font-size:12px;font-weight:500;padding:5px 12px;border:none;border-radius:6px;background:transparent;color:var(--text2);cursor:pointer;white-space:nowrap}
+.half-btn.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.container{max-width:640px;margin:0 auto;padding:1.25rem 1rem 5rem}
+.tab-bar{display:flex;gap:4px;background:var(--surface2);border-radius:var(--radius);padding:4px;margin-bottom:1.25rem}
+.tab{flex:1;font-size:12px;font-weight:500;padding:7px 4px;border:none;border-radius:var(--radius-sm);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px}
+.tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.sec{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:.75rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+.two-col .card{margin-bottom:0}
+.row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:14px}
+.row:last-child{border-bottom:none}
+.rl{color:var(--text2)}.rv{font-weight:500}
+.rv.green{color:var(--green)}.rv.coral{color:var(--coral)}.rv.amber{color:var(--amber)}.rv.blue{color:var(--blue)}.rv.muted{color:var(--text3)}
+.sep{border:none;border-top:0.5px solid var(--border);margin:.7rem 0}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:600;display:inline-block}
+.bg{background:var(--green-bg);color:var(--green-dark)}
+.ba{background:var(--amber-bg);color:var(--amber)}
+.bb{background:var(--blue-bg);color:var(--blue)}
+.prog-bar{background:var(--surface2);border-radius:99px;height:8px;overflow:hidden;margin-top:5px}
+.prog-fill{height:100%;border-radius:99px;background:var(--green);transition:width .4s}
+.notice{border-radius:var(--radius-sm);padding:.65rem 1rem;font-size:12px;margin-top:.5rem}
+.income-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.75rem}
+.income-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.85rem .9rem;cursor:pointer;transition:all .15s;user-select:none}
+.income-card:hover{background:var(--surface2)}
+.income-card.received{border-color:#9FE1CB;background:var(--green-bg)}
+.income-avatar{width:30px;height:30px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:14px;margin-bottom:.4rem;background:var(--surface2);color:var(--text2)}
+.income-card.received .income-avatar{background:var(--green);color:#fff}
+.income-person{font-size:13px;font-weight:600}
+.income-status{font-size:10px;color:var(--text3);margin-top:1px}
+.income-card.received .income-status{color:var(--green-dark)}
+.income-amount{font-size:15px;font-weight:700;color:var(--text2);margin-top:.3rem}
+.income-card.received .income-amount{color:var(--green)}
+.income-note{font-size:10px;color:var(--text3);margin-top:2px}
+.day-list{display:flex;flex-direction:column;gap:6px}
+.day-row{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .12s}
+.day-row:hover{background:var(--surface2)}
+.day-row.done{border-color:#9FE1CB;background:var(--green-bg)}
+.day-left{display:flex;align-items:center;gap:10px}
+.day-num-badge{width:34px;height:34px;border-radius:var(--radius-sm);background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--text);flex-shrink:0}
+.day-num-badge.work{background:var(--blue-bg);color:var(--blue)}
+.day-num-badge.done-b{background:var(--green);color:#fff}
+.day-title{font-size:14px;font-weight:500}
+.day-sub{font-size:11px;color:var(--text2);display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+.day-right{text-align:right}
+.give-amt{font-size:15px;font-weight:600}
+.give-sub{font-size:11px;color:var(--text2);margin-top:1px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;padding:1.25rem;width:100%;max-width:640px;animation:slideUp .2s ease}
+@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:40px;height:4px;background:var(--border2);border-radius:99px;margin:0 auto 1rem}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:1rem}
+.btn-row{display:flex;gap:8px;margin-top:1rem}
+.btn{font-size:14px;padding:10px 16px;border-radius:var(--radius-sm);border:0.5px solid var(--border2);background:var(--surface2);color:var(--text);cursor:pointer;font-weight:500}
+.btn-primary{background:var(--green);color:#fff;border-color:var(--green);flex:1}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-undo{background:var(--coral-bg);color:var(--coral);border-color:var(--coral);flex:1}
+.log-item{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:7px 0;border-bottom:0.5px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-left{display:flex;flex-direction:column;gap:1px}
+.log-day{font-weight:500}.log-desc{font-size:11px;color:var(--text2)}
+.log-amt{font-weight:600;color:var(--green)}
+.input-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.input-row label{font-size:13px;color:var(--text2);flex:1}
+.input-row input{width:130px;font-size:14px;padding:7px 10px;border:0.5px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text)}
+.workday-grid{display:flex;flex-wrap:wrap;gap:8px}
+.workday-chip{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text2);background:var(--surface2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:5px 10px;cursor:pointer}
+.workday-chip.checked{background:var(--blue-bg);color:var(--blue);border-color:#B5D4F4}
+.apply-btn{width:100%;padding:12px;font-size:15px;font-weight:600;border-radius:var(--radius-sm);border:none;background:var(--green);color:#fff;cursor:pointer;margin-top:.5rem}
+.apply-btn:hover{background:var(--green-dark)}
+.empty-state{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:13px}
+.empty-state i{font-size:32px;margin-bottom:.5rem;display:block}
+@media (min-width:600px){
+  .modal{border-radius:var(--radius);max-width:480px;margin:auto;margin-bottom:2rem}
+  .modal-overlay{align-items:center}
+}
+@media print{
+  .print-btn,.month-nav-btn,.tab-bar,.modal-overlay{display:none !important}
+  body{background:#fff}
+  #tab-overview,#tab-daily,#tab-log{display:block !important}
+  #tab-settings{display:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-header-left">
+    <div class="app-icon">
+      <svg viewBox="0 0 36 36" width="22" height="22">
+        <circle cx="18" cy="18" r="16" fill="#FFD23F" stroke="#C97D00" stroke-width="2"/>
+        <text x="18" y="24" font-size="16" font-family="Georgia,serif" font-weight="bold" text-anchor="middle" fill="#C97D00">&#8369;</text>
+      </svg>
+    </div>
+    <div>
+      <div class="app-title">Mama's Vault</div>
+      <div class="app-sub">Kinsenas budget tracker</div>
+    </div>
+  </div>
+  <button class="print-btn" onclick="window.print()"><i class="ti ti-printer"></i> Print / PDF</button>
+</div>
+
+<div class="month-bar">
+  <div class="month-nav">
+    <button class="month-nav-btn" onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+    <div class="month-name" id="month-name">—</div>
+    <button class="month-nav-btn" onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+  </div>
+  <div class="half-toggle">
+    <button class="half-btn active" id="hbtn1" onclick="setHalf(1)">1st &bull; 1&ndash;15</button>
+    <button class="half-btn" id="hbtn2" onclick="setHalf(2)">2nd</button>
+  </div>
+</div>
+
+<div class="container">
+  <div class="tab-bar">
+    <button class="tab active" onclick="showTab('overview')"><i class="ti ti-home"></i> Overview</button>
+    <button class="tab" onclick="showTab('daily')"><i class="ti ti-calendar"></i> Daily</button>
+    <button class="tab" onclick="showTab('log')"><i class="ti ti-list"></i> Log</button>
+    <button class="tab" onclick="showTab('settings')"><i class="ti ti-settings"></i> Settings</button>
+  </div>
+  <div id="tab-overview"></div>
+  <div id="tab-daily" style="display:none"></div>
+  <div id="tab-log" style="display:none"></div>
+  <div id="tab-settings" style="display:none"></div>
+</div>
+
+<div class="modal-overlay" id="modal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div id="modal-body"></div>
+    <div class="btn-row" id="modal-btns"></div>
+  </div>
+</div>
+
+<script>
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Always use current date on load
+var now = new Date();
+var curMonth = now.getMonth();
+var curYear = now.getFullYear();
+
+var S = {
+  half: 1,
+  leftover: 0,
+  papa: 10000,
+  ate: 5000,
+  janine1: 3000,
+  janine2: 2000,
+  transport: 2000,
+  water: 500,
+  maint: 500,
+  daily: 800,
+  baon: 200,
+  grocery: 2000,
+  workDays: [1,2,5,8,9,12]
+};
+
+var store = {};
+var selectedDay = null;
+
+function save() {
+  try {
+    localStorage.setItem('mv_store', JSON.stringify(store));
+    localStorage.setItem('mv_s', JSON.stringify(S));
+  } catch(e) {}
+}
+
+function load() {
+  try {
+    var d = localStorage.getItem('mv_store');
+    if (d) store = JSON.parse(d);
+    var sv = localStorage.getItem('mv_s');
+    if (sv) {
+      var p = JSON.parse(sv);
+      // Don't restore half — always start on 1st half
+      for (var k in p) {
+        if (k !== 'half') S[k] = p[k];
+      }
+    }
+    // Always reset to current date
+    var n = new Date();
+    curMonth = n.getMonth();
+    curYear = n.getFullYear();
+  } catch(e) {}
+}
+
+function halfKey() { return curYear + '-' + curMonth + '-' + S.half; }
+function monthKey() { return 'inc-' + curYear + '-' + curMonth; }
+
+function getHalfData() {
+  var k = halfKey();
+  if (!store[k]) store[k] = { given: {}, log: [] };
+  return store[k];
+}
+
+function getMonthIncome() {
+  var k = monthKey();
+  if (!store[k]) store[k] = { papa1:false, papa2:false, ate1:false, ate2:false, janine1:false, janine2:false };
+  return store[k];
+}
+
+function fmt(n) { return '\u20B1' + Math.round(n).toLocaleString('en-PH'); }
+function daysInMonth() { return new Date(curYear, curMonth + 1, 0).getDate(); }
+function has31() { return daysInMonth() === 31; }
+function getDaysInHalf() { return S.half === 1 ? 15 : daysInMonth() - 15; }
+function calDay(d) { return S.half === 1 ? d : d + 15; }
+function isWork(d) { return S.workDays.indexOf(d) > -1; }
+function isJanineDay(d) { return d === 3; }
+
+function papaAmt() {
+  if (S.half === 1) return has31() ? S.papa : S.papa - 1000;
+  return S.papa;
+}
+
+function janineAmt() { return S.half === 1 ? S.janine1 : S.janine2; }
+
+function incomeKey(person) { return person + S.half; }
+function incomeReceived(person) { return !!getMonthIncome()[incomeKey(person)]; }
+
+function toggleIncome(person) {
+  var inc = getMonthIncome();
+  var k = incomeKey(person);
+  inc[k] = !inc[k];
+  save();
+  renderAll();
+}
+
+function totalReceived() {
+  var t = 0;
+  if (incomeReceived('papa')) t += papaAmt();
+  if (incomeReceived('ate')) t += S.ate;
+  if (incomeReceived('janine')) t += janineAmt();
+  return t;
+}
+
+function totalExpected() { return papaAmt() + S.ate + janineAmt(); }
+
+function getDayGive(d) {
+  var amount = S.daily;
+  var notes = [];
+  var extras = 0;
+  if (d === 1) {
+    if (S.half === 1 && S.leftover > 0) {
+      extras += S.leftover;
+      notes.push({ label: 'Leftover (prev kinsenas)', val: fmt(S.leftover), color: 'green' });
+    }
+    extras += S.grocery;
+    notes.push({ label: 'Grocery advance', val: fmt(S.grocery), color: 'blue' });
+  }
+  notes.push({ label: 'Daily ibigay kay mama', val: fmt(S.daily), color: '' });
+  return { amount: amount + extras, notes: notes, isWork: isWork(d), isJanine: isJanineDay(d) };
+}
+
+function getTotals() {
+  var days = getDaysInHalf();
+  var data = getHalfData();
+  var gkeys = Object.keys(data.given);
+  var doneCount = gkeys.length;
+  var totalGiven = 0;
+  for (var i = 0; i < gkeys.length; i++) totalGiven += data.given[gkeys[i]];
+  var remainingDays = days - doneCount;
+  var darating = remainingDays * S.daily;
+  if (!data.given[1]) {
+    darating += S.grocery;
+    if (S.half === 1 && S.leftover > 0) darating += S.leftover;
+  }
+  if (!incomeReceived('janine')) {
+    darating -= janineAmt();
+    if (darating < 0) darating = 0;
+  }
+  return { totalGiven: totalGiven, darating: darating, projected: totalGiven + darating, remaining: remainingDays, days: days, doneCount: doneCount };
+}
+
+function renderOverview() {
+  var T = getTotals();
+  var fixed = S.transport + S.water + S.maint;
+  var received = totalReceived();
+  var expected = totalExpected();
+  var pct = T.days > 0 ? Math.round(T.doneCount / T.days * 100) : 0;
+  var receivedPct = expected > 0 ? Math.round(received / expected * 100) : 0;
+  var halfLabel = S.half === 1 ? '1st half (1\u201315)' : '2nd half (16\u2013' + daysInMonth() + ')';
+  var papaOk = incomeReceived('papa');
+  var ateOk = incomeReceived('ate');
+  var janineOk = incomeReceived('janine');
+
+  var h = '';
+  h += '<div class="sec">' + MONTHS[curMonth] + ' ' + curYear + ' \u2014 ' + halfLabel + '</div>';
+  h += '<div class="income-grid">';
+
+  h += '<div class="income-card' + (papaOk ? ' received' : '') + '" onclick="toggleIncome(\'papa\')">';
+  h += '<div class="income-avatar"><i class="ti ti-' + (papaOk ? 'check' : 'user') + '"></i></div>';
+  h += '<div class="income-person">Papa</div>';
+  h += '<div class="income-status">' + (papaOk ? 'Natanggap \u2713' : 'Hindi pa') + '</div>';
+  h += '<div class="income-amount">' + fmt(papaAmt()) + '</div>';
+  if (S.half === 1 && !has31()) h += '<div class="income-note">\u26a0\ufe0f \u20b11k nakatabi</div>';
+  h += '</div>';
+
+  h += '<div class="income-card' + (ateOk ? ' received' : '') + '" onclick="toggleIncome(\'ate\')">';
+  h += '<div class="income-avatar"><i class="ti ti-' + (ateOk ? 'check' : 'user') + '"></i></div>';
+  h += '<div class="income-person">Ate</div>';
+  h += '<div class="income-status">' + (ateOk ? 'Natanggap \u2713' : 'Hindi pa') + '</div>';
+  h += '<div class="income-amount">' + fmt(S.ate) + '</div>';
+  h += '</div>';
+
+  h += '<div class="income-card' + (janineOk ? ' received' : '') + '" onclick="toggleIncome(\'janine\')">';
+  h += '<div class="income-avatar"><i class="ti ti-' + (janineOk ? 'check' : 'coins') + '"></i></div>';
+  h += '<div class="income-person">Janine</div>';
+  h += '<div class="income-status">' + (janineOk ? 'Natanggap \u2713' : 'Hindi pa') + '</div>';
+  h += '<div class="income-amount">' + fmt(janineAmt()) + '</div>';
+  h += '<div class="income-note">Day ' + (S.half === 1 ? '3' : '18') + ' \u2014 sa\'yo ito</div>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '<div class="card"><div class="sec">Budget mo ngayon</div>';
+  h += '<div class="row"><span class="rl">Natanggap mo na</span><span class="rv green" style="font-size:17px">' + fmt(received) + '</span></div>';
+  h += '<div class="row"><span class="rl">Expected total</span><span class="rv muted">' + fmt(expected) + '</span></div>';
+  h += '<div class="prog-bar"><div class="prog-fill" style="width:' + receivedPct + '%"></div></div>';
+  h += '<div style="font-size:12px;color:var(--text3);margin-top:5px">' + (received >= expected ? 'Kumpleto na ang income! \u2705' : 'Naghihintay pa ng ' + fmt(expected - received)) + '</div>';
+  h += '</div>';
+
+  h += '<div class="two-col">';
+  h += '<div class="card"><div class="sec">Ikaw ang babayad</div>';
+  h += '<div class="row"><span class="rl">Transport</span><span class="rv coral">' + fmt(S.transport) + '</span></div>';
+  h += '<div class="row"><span class="rl">Water</span><span class="rv coral">' + fmt(S.water) + '</span></div>';
+  h += '<div class="row"><span class="rl">Maintenance</span><span class="rv coral">' + fmt(S.maint) + '</span></div>';
+  h += '<div class="row"><span class="rl">Grocery adv.</span><span class="rv blue">' + fmt(S.grocery) + '</span></div>';
+  h += '</div>';
+  h += '<div class="card"><div class="sec">Mama\'s vault</div>';
+  h += '<div class="row"><span class="rl">Given so far</span><span class="rv green">' + fmt(T.totalGiven) + '</span></div>';
+  h += '<div class="row"><span class="rl">Darating pa (on hand)</span><span class="rv amber">' + fmt(T.darating) + '</span></div>';
+  if (!janineOk) h += '<div class="row"><span class="rl" style="color:var(--coral)">Janine (wala pa)</span><span class="rv coral">\u2212' + fmt(janineAmt()) + '</span></div>';
+  h += '<div class="row"><span class="rl" style="font-weight:600">Projected total</span><span class="rv green" style="font-weight:700">' + fmt(T.projected) + '</span></div>';
+  h += '</div></div>';
+
+  h += '<div class="card"><div class="sec">Giving progress</div>';
+  h += '<div class="row"><span class="rl">Days done</span><span class="rv">' + T.doneCount + ' / ' + T.days + '</span></div>';
+  h += '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%"></div></div>';
+  h += '<div style="font-size:12px;color:var(--text3);margin-top:5px">' + pct + '% ng kinsenas tapos na</div>';
+  h += '</div>';
+
+  document.getElementById('tab-overview').innerHTML = h;
+}
+
+function renderDaily() {
+  var days = getDaysInHalf();
+  var T = getTotals();
+  var data = getHalfData();
+  var h = '';
+  h += '<div class="card">';
+  h += '<div class="row"><span class="rl">Kinsenas</span><span class="rv">' + MONTHS[curMonth] + ' ' + curYear + ', ' + (S.half === 1 ? '1st half' : '2nd half') + '</span></div>';
+  h += '<div class="row"><span class="rl">Days remaining</span><span class="rv">' + T.remaining + ' days</span></div>';
+  h += '<div class="row"><span class="rl">Total given so far</span><span class="rv green">' + fmt(T.totalGiven) + '</span></div>';
+  h += '</div><div class="day-list">';
+
+  for (var d = 1; d <= days; d++) {
+    var info = getDayGive(d);
+    var done = data.given[d] !== undefined;
+    var cd = calDay(d);
+    var badgeClass = done ? 'done-b' : (info.isWork ? 'work' : '');
+    var tags = '';
+    if (d === 1 && S.half === 1 && S.leftover > 0) tags += '<span class="badge bg">+leftover</span> ';
+    if (d === 1) tags += '<span class="badge bb">+grocery</span> ';
+    if (info.isJanine) tags += '<span class="badge ba">+' + fmt(janineAmt()) + ' Janine</span> ';
+    if (info.isWork) tags += '<span class="badge bb">may pasok</span>';
+    if (!tags) tags = '<span style="color:var(--text3);font-size:11px">rest day</span>';
+
+    h += '<div class="day-row' + (done ? ' done' : '') + '" onclick="openModal(' + d + ')">';
+    h += '<div class="day-left">';
+    h += '<div class="day-num-badge ' + badgeClass + '">' + (done ? '<i class="ti ti-check" style="font-size:16px"></i>' : cd) + '</div>';
+    h += '<div><div class="day-title">' + MONTHS[curMonth] + ' ' + cd + '</div>';
+    h += '<div class="day-sub">' + tags + '</div></div>';
+    h += '</div>';
+    h += '<div class="day-right">';
+    h += '<div class="give-amt" style="color:' + (done ? 'var(--green)' : 'var(--text)') + '">' + fmt(info.amount) + '</div>';
+    h += '<div class="give-sub">' + (done ? 'given \u2713' : 'ibigay kay mama') + '</div>';
+    h += '</div></div>';
+  }
+  h += '</div>';
+  document.getElementById('tab-daily').innerHTML = h;
+}
+
+function renderLog() {
+  var data = getHalfData();
+  var log = data.log;
+  var h = '';
+  if (!log || log.length === 0) {
+    h = '<div class="empty-state"><i class="ti ti-notes"></i>Wala pang entry ngayong kinsenas.</div>';
+  } else {
+    h = '<div class="card">';
+    for (var i = log.length - 1; i >= 0; i--) {
+      var item = log[i];
+      h += '<div class="log-item">';
+      h += '<div class="log-left"><span class="log-day">' + MONTHS[curMonth] + ' ' + calDay(item.day) + '</span>';
+      h += '<span class="log-desc">' + item.desc + '</span></div>';
+      h += '<span class="log-amt">' + fmt(item.amount) + '</span>';
+      h += '</div>';
+    }
+    h += '</div>';
+  }
+  document.getElementById('tab-log').innerHTML = h;
+}
+
+function renderSettings() {
+  var chips = '';
+  for (var d = 1; d <= 15; d++) {
+    var chk = isWork(d);
+    chips += '<div class="workday-chip' + (chk ? ' checked' : '') + '" id="chip-' + d + '" onclick="toggleWork(' + d + ')">';
+    chips += '<i class="ti ti-' + (chk ? 'check' : 'x') + '" id="cicon-' + d + '" style="font-size:12px"></i> Day ' + d + '</div>';
+  }
+  var h = '';
+  h += '<div class="card"><div class="sec">Income</div>';
+  h += '<div class="input-row"><label>Papa (per kinsenas)</label><input type="number" id="s-papa" value="' + S.papa + '"></div>';
+  h += '<div class="input-row"><label>Ate (per kinsenas)</label><input type="number" id="s-ate" value="' + S.ate + '"></div>';
+  h += '<div class="input-row"><label>Janine \u2014 1st half</label><input type="number" id="s-j1" value="' + S.janine1 + '"></div>';
+  h += '<div class="input-row"><label>Janine \u2014 2nd half</label><input type="number" id="s-j2" value="' + S.janine2 + '"></div>';
+  h += '</div>';
+  h += '<div class="card"><div class="sec">Fixed costs</div>';
+  h += '<div class="input-row"><label>Transport ni papa</label><input type="number" id="s-transport" value="' + S.transport + '"></div>';
+  h += '<div class="input-row"><label>Water bill</label><input type="number" id="s-water" value="' + S.water + '"></div>';
+  h += '<div class="input-row"><label>Maintenance</label><input type="number" id="s-maint" value="' + S.maint + '"></div>';
+  h += '</div>';
+  h += '<div class="card"><div class="sec">Daily amounts</div>';
+  h += '<div class="input-row"><label>Daily ibigay kay mama</label><input type="number" id="s-daily" value="' + S.daily + '"></div>';
+  h += '<div class="input-row"><label>Baon ni papa</label><input type="number" id="s-baon" value="' + S.baon + '"></div>';
+  h += '<div class="input-row"><label>Grocery advance</label><input type="number" id="s-grocery" value="' + S.grocery + '"></div>';
+  h += '<div class="input-row"><label>Leftover (prev kinsenas)</label><input type="number" id="s-leftover" value="' + S.leftover + '"></div>';
+  h += '</div>';
+  h += '<div class="card"><div class="sec">Work days ni papa</div><div class="workday-grid">' + chips + '</div></div>';
+  h += '<button class="apply-btn" onclick="applySettings()"><i class="ti ti-device-floppy"></i> I-save ang settings</button>';
+  document.getElementById('tab-settings').innerHTML = h;
+}
+
+function openModal(d) {
+  selectedDay = d;
+  var info = getDayGive(d);
+  var data = getHalfData();
+  var done = data.given[d] !== undefined;
+  var cd = calDay(d);
+
+  document.getElementById('modal-title').textContent = MONTHS[curMonth] + ' ' + cd + ' \u2014 ibigay kay mama';
+
+  var b = '';
+  for (var i = 0; i < info.notes.length; i++) {
+    var n = info.notes[i];
+    b += '<div class="row"><span class="rl">' + n.label + '</span><span class="rv ' + n.color + '">' + n.val + '</span></div>';
+  }
+  b += '<hr class="sep">';
+  b += '<div class="row"><span class="rl" style="font-weight:600;font-size:15px">Total ibigay</span><span class="rv green" style="font-size:20px">' + fmt(info.amount) + '</span></div>';
+
+  if (info.isWork) {
+    b += '<div class="notice" style="background:var(--blue-bg);color:var(--blue);border:0.5px solid #B5D4F4">';
+    b += '<i class="ti ti-info-circle"></i> May pasok si daddy \u2014 ipaabot ni mama ang ' + fmt(S.baon) + ' na baon niya.</div>';
+  } else {
+    b += '<div class="notice" style="background:var(--green-bg);color:var(--green-dark);border:0.5px solid #9FE1CB">';
+    b += '<i class="ti ti-home"></i> Walang pasok si daddy. Pag may sukli sa ulam, kanya na ni mama.</div>';
+  }
+
+  if (info.isJanine) {
+    b += '<div class="notice" style="background:var(--amber-bg);color:var(--amber);border:0.5px solid #FAC775">';
+    b += '<i class="ti ti-coins"></i> Darating ang ' + fmt(janineAmt()) + ' ni Janine ngayon \u2014 sa cash mo ito, hindi kay mama.</div>';
+  }
+
+  if (done) {
+    b += '<div style="margin-top:.75rem;padding:.65rem 1rem;background:var(--green-bg);border-radius:var(--radius-sm);font-size:13px;color:var(--green-dark);font-weight:600">';
+    b += '<i class="ti ti-check"></i> Ibinigay na ito!</div>';
+  }
+
+  document.getElementById('modal-body').innerHTML = b;
+
+  var btns = '';
+  if (done) {
+    btns += '<button class="btn btn-undo" onclick="undoDone()"><i class="ti ti-arrow-back-up"></i> I-undo</button>';
+    btns += '<button class="btn" onclick="closeModal()">Isara</button>';
+  } else {
+    btns += '<button class="btn btn-primary" onclick="markDone()"><i class="ti ti-check"></i> Ibinigay na kay mama</button>';
+    btns += '<button class="btn" onclick="closeModal()">Cancel</button>';
+  }
+  document.getElementById('modal-btns').innerHTML = btns;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  selectedDay = null;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal')) closeModal();
+}
+
+function markDone() {
+  if (selectedDay === null) return;
+  var info = getDayGive(selectedDay);
+  var data = getHalfData();
+  data.given[selectedDay] = info.amount;
+  var desc = selectedDay === 1 ? 'Daily + grocery advance' : 'Daily';
+  if (selectedDay === 1 && S.half === 1 && S.leftover > 0) desc = 'Daily + leftover + grocery';
+  data.log.push({ day: selectedDay, amount: info.amount, desc: desc });
+  if (info.isJanine) {
+    var inc = getMonthIncome();
+    inc[incomeKey('janine')] = true;
+  }
+  save();
+  closeModal();
+  renderAll();
+}
+
+function undoDone() {
+  if (selectedDay === null) return;
+  var info = getDayGive(selectedDay);
+  var data = getHalfData();
+  delete data.given[selectedDay];
+  for (var i = data.log.length - 1; i >= 0; i--) {
+    if (data.log[i].day === selectedDay) { data.log.splice(i, 1); break; }
+  }
+  if (info.isJanine) {
+    var inc = getMonthIncome();
+    inc[incomeKey('janine')] = false;
+  }
+  save();
+  closeModal();
+  renderAll();
+}
+
+function toggleWork(d) {
+  var chip = document.getElementById('chip-' + d);
+  var icon = document.getElementById('cicon-' + d);
+  if (!chip) return;
+  var idx = S.workDays.indexOf(d);
+  if (idx > -1) {
+    S.workDays.splice(idx, 1);
+    chip.classList.remove('checked');
+    icon.className = 'ti ti-x';
+  } else {
+    S.workDays.push(d);
+    chip.classList.add('checked');
+    icon.className = 'ti ti-check';
+  }
+  icon.style.fontSize = '12px';
+}
+
+function applySettings() {
+  S.papa      = parseInt(document.getElementById('s-papa').value)      || 10000;
+  S.ate       = parseInt(document.getElementById('s-ate').value)       || 5000;
+  S.janine1   = parseInt(document.getElementById('s-j1').value)        || 3000;
+  S.janine2   = parseInt(document.getElementById('s-j2').value)        || 2000;
+  S.transport = parseInt(document.getElementById('s-transport').value) || 2000;
+  S.water     = parseInt(document.getElementById('s-water').value)     || 500;
+  S.maint     = parseInt(document.getElementById('s-maint').value)     || 500;
+  S.daily     = parseInt(document.getElementById('s-daily').value)     || 800;
+  S.baon      = parseInt(document.getElementById('s-baon').value)      || 200;
+  S.grocery   = parseInt(document.getElementById('s-grocery').value)   || 2000;
+  S.leftover  = parseInt(document.getElementById('s-leftover').value)  || 0;
+  save();
+  renderAll();
+  showTab('overview');
+}
+
+function changeMonth(dir) {
+  curMonth += dir;
+  if (curMonth > 11) { curMonth = 0; curYear++; }
+  if (curMonth < 0)  { curMonth = 11; curYear--; }
+  selectedDay = null;
+  updateMonthBar();
+  renderAll();
+}
+
+function setHalf(h) {
+  S.half = h;
+  selectedDay = null;
+  updateMonthBar();
+  renderAll();
+}
+
+function updateMonthBar() {
+  document.getElementById('month-name').textContent = MONTHS[curMonth] + ' ' + curYear;
+  document.getElementById('hbtn1').classList.toggle('active', S.half === 1);
+  document.getElementById('hbtn2').classList.toggle('active', S.half === 2);
+  document.getElementById('hbtn2').innerHTML = '2nd &bull; 16&ndash;' + daysInMonth();
+}
+
+function showTab(name) {
+  var names = ['overview','daily','log','settings'];
+  for (var i = 0; i < names.length; i++) {
+    document.getElementById('tab-' + names[i]).style.display = names[i] === name ? 'block' : 'none';
+  }
+  var tabs = document.querySelectorAll('.tab');
+  for (var j = 0; j < tabs.length; j++) {
+    tabs[j].classList.toggle('active', names[j] === name);
+  }
+  if (name === 'settings') renderSettings();
+}
+
+function renderAll() {
+  renderOverview();
+  renderDaily();
+  renderLog();
+}
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+
+load();
+updateMonthBar();
+renderAll();
+</script>
+</body>
+</html>
