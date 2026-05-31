@@ -1,0 +1,19 @@
+{
+  "name": "Mama's Vault",
+  "short_name": "Mama's Vault",
+  "description": "Kinsenas budget tracker",
+  "start_url": "/BUDGET/",
+  "scope": "/BUDGET/",
+  "display": "standalone",
+  "background_color": "#f5f4f0",
+  "theme_color": "#F0A500",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
